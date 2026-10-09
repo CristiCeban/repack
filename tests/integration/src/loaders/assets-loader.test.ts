@@ -176,6 +176,40 @@ describe('assetLoader', () => {
       }
     );
 
+    // must match the folders React Native resolves images from at runtime
+    it.each([
+      { extension: 'png', destination: 'drawable-mdpi' },
+      { extension: 'jpg', destination: 'drawable-mdpi' },
+      { extension: 'jpeg', destination: 'drawable-mdpi' },
+      { extension: 'gif', destination: 'drawable-mdpi' },
+      { extension: 'webp', destination: 'drawable-mdpi' },
+      { extension: 'bmp', destination: 'raw' },
+      { extension: 'svg', destination: 'raw' },
+    ])(
+      'should emit .$extension images to $destination',
+      async ({ extension, destination }) => {
+        const content = `image fixture ${extension}\n`;
+        const { volume } = await compileBundle(
+          'android',
+          {
+            ...getReactNativeVirtualModules(),
+            './index.js': `export { default } from './__fixtures__/assets/TestImage.${extension}';`,
+          },
+          false,
+          undefined,
+          undefined,
+          { extensions: [extension] }
+        );
+
+        expect(
+          volume.readFileSync(
+            `/out/${destination}/__fixtures___assets_testimage.${extension}`,
+            'utf8'
+          )
+        ).toBe(content);
+      }
+    );
+
     describe.each([
       { mode: 'iOS', platform: 'ios', devServer: false, remote: false },
       {

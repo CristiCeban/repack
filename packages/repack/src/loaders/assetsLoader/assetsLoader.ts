@@ -15,7 +15,8 @@ export const raw = true;
 
 const testXml = /\.(xml)$/;
 const testMP4 = /\.(mp4)$/;
-const testImages = /\.(png|jpg|gif|webp)$/;
+// mirrors `drawableFileTypes` from `@react-native/asset-utils` (xml is handled separately)
+const testImages = /\.(gif|heic|heif|jpeg|jpg|ktx|png|webp)$/;
 const testFonts = /\.(ttf|otf|ttc)$/;
 
 export default async function repackAssetsLoader(
